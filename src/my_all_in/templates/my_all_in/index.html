@@ -1,0 +1,30 @@
+<!-- my_all_in/templates/my_all_in/index.html -->
+{% extends 'my_all_in/base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Добро пожаловать в наш магазин!</h1>
+    <p class="lead">Здесь вы найдете лучшие товары по лучшим ценам.</p>
+    <hr class="my-4">
+
+    <h3>Наши товары:</h3>
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">Цена: {{ product.price }} ₽</p>
+                        <p class="card-text">В наличии: {{ product.number }}</p>
+                        <a href="{% url 'my_all_in:product_detail' product.id %}" class="btn btn-primary">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>Товаров пока нет</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
