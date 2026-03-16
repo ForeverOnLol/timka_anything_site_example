@@ -1,0 +1,300 @@
+<!-- my_all_in/templates/my_all_in/product_detail.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .product-name {
+            font-size: 32px;
+            color: #333;
+        }
+
+        .status-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .price-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .price {
+            font-size: 48px;
+            font-weight: 700;
+        }
+
+        .price-label {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .stock-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .stock-in {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .stock-out {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .categories {
+            margin-bottom: 30px;
+        }
+
+        .categories h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .category-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-tag {
+            background: #f0f0f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: #666;
+        }
+
+        .description {
+            margin-bottom: 30px;
+        }
+
+        .description h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .description-content {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            line-height: 1.6;
+            color: #444;
+            white-space: pre-wrap;
+        }
+
+        .meta-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .meta-item {
+            color: #666;
+        }
+
+        .meta-item strong {
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e1e1e1;
+            color: #666;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d1d1;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'my_all_in:product_list' %}" class="back-link">← Вернуться к списку</a>
+
+        <div class="product-card">
+            <div class="header">
+                <h1 class="product-name">{{ product.name }}</h1>
+                <span class="status-badge {% if product.is_active %}status-active{% else %}status-inactive{% endif %}">
+                    {% if product.is_active %}Активен{% else %}Неактивен{% endif %}
+                </span>
+            </div>
+
+            <div class="price-section">
+                <div class="price">{{ product.price }} ₽</div>
+                <div class="price-label">текущая цена</div>
+            </div>
+
+            <div class="stock-info">
+                <span>Наличие на складе:</span>
+                <span class="{% if product.number > 0 %}stock-in{% else %}stock-out{% endif %}">
+                    {% if product.number > 0 %}
+                        {{ product.number }} шт. в наличии
+                    {% else %}
+                        Нет в наличии
+                    {% endif %}
+                </span>
+            </div>
+
+            {% if product.categories.all %}
+            <div class="categories">
+                <h3>Категории</h3>
+                <div class="category-tags">
+                    {% for category in product.categories.all %}
+                    <span class="category-tag">{{ category.name }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if product.payload %}
+            <div class="description">
+                <h3>Описание</h3>
+                <div class="description-content">
+                    {{ product.payload|linebreaks }}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="meta-info">
+                <div class="meta-item">
+                    <strong>Владелец</strong>
+                    {{ product.user.get_full_name|default:product.user.username|default:"Не указан" }}
+                </div>
+                <div class="meta-item">
+                    <strong>Дата добавления</strong>
+                    {{ product.created_at|date:"d.m.Y H:i" }}
+                </div>
+                <div class="meta-item">
+                    <strong>Последнее обновление</strong>
+                    {{ product.updated_at|date:"d.m.Y H:i" }}
+                </div>
+                <div class="meta-item">
+                    <strong>Артикул</strong>
+                    #{{ product.id }}
+                </div>
+            </div>
+
+            <div class="actions">
+                <a href="{% url 'my_all_in:add_item' %}?edit={{ product.id }}" class="btn btn-primary">✏️ Редактировать</a>
+                <a href="{% url 'my_all_in:product_delete' product.id %}" class="btn btn-danger">🗑️ Удалить</a>
+                <a href="{% url 'my_all_in:product_list' %}" class="btn btn-secondary">↺ Назад</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

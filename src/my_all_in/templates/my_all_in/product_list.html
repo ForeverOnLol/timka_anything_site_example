@@ -1,0 +1,302 @@
+<!-- my_all_in/templates/my_all_in/product_list.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 32px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e1e1e1;
+            color: #666;
+        }
+
+        .filters {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .filter-form {
+            display: flex;
+            gap: 20px;
+            align-items: flex-end;
+        }
+
+        .filter-group {
+            flex: 1;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .product-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .product-price {
+            font-size: 24px;
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .product-stock {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .stock-in {
+            color: #27ae60;
+        }
+
+        .stock-out {
+            color: #e74c3c;
+        }
+
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .category-tag {
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .product-footer {
+            margin-top: auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        .product-footer .btn {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .pagination {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .pagination .btn {
+            padding: 10px 15px;
+        }
+
+        .pagination .current {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .no-products {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            color: #666;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📦 {{ title }}</h1>
+            <a href="{% url 'my_all_in:add_item' %}" class="btn btn-primary">➕ Добавить товар</a>
+        </div>
+
+        <!-- Фильтры -->
+        <div class="filters">
+            <form method="get" class="filter-form">
+                <div class="filter-group">
+                    <label for="category">Категория</label>
+                    <select name="category" id="category">
+                        <option value="">Все категории</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"i" %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="search">Поиск</label>
+                    <input type="text" name="search" id="search" value="{{ request.GET.search }}" placeholder="Название или описание...">
+                </div>
+                <div class="filter-group">
+                    <button type="submit" class="btn btn-primary">🔍 Применить</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Список товаров -->
+        {% if page_obj %}
+        <div class="products-grid">
+            {% for product in page_obj %}
+            <div class="product-card">
+                <div class="product-name">{{ product.name }}</div>
+                <div class="product-price">{{ product.price }} ₽</div>
+                <div class="product-stock {% if product.number > 0 %}stock-in{% else %}stock-out{% endif %}">
+                    {% if product.number > 0 %}
+                        ✓ В наличии: {{ product.number }} шт.
+                    {% else %}
+                        ✗ Нет в наличии
+                    {% endif %}
+                </div>
+
+                {% if product.categories.all %}
+                <div class="categories">
+                    {% for category in product.categories.all %}
+                    <span class="category-tag">{{ category.name }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="product-footer">
+                    <a href="{% url 'my_all_in:product_detail' product.id %}" class="btn btn-secondary">Подробнее</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Пагинация -->
+        {% if page_obj.paginator.num_pages > 1 %}
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+            <a href="?page=1{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+               class="btn btn-secondary">« Первая</a>
+            <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+               class="btn btn-secondary">‹ Предыдущая</a>
+            {% endif %}
+
+            <span class="current">
+                Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+               class="btn btn-secondary">Следующая ›</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.category %}&category={{ request.GET.category }}{% endif %}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+               class="btn btn-secondary">Последняя »</a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="no-products">
+            <h2>😕 Товары не найдены</h2>
+            <p style="margin-top: 20px;">Добавьте первый товар, нажав кнопку "Добавить товар"</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
